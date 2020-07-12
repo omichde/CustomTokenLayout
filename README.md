@@ -1,23 +1,25 @@
 # Custom Token Layout experiment with SwiftUI and UIKit
 
 This is an attempt to build a custom layout on top of a `TokenView` in order to get a proper arrangement for a sequence/line of token views.
-The "Token View" consists of a title or icon and a trailing info label with a given background and foreground color with rounded corners.
+The "Token View" consists of a name/title or icon and a trailing info label with a given background and foreground color and rounded corners.
+
+![Token View](TokenView.png)
+
+The challenge for the "Token Line View":
+
+- show token views horizontally from left to right in only one "line" (no "flow")
+- try to never exceed the width of the canvas
+- never shorten the first token view
+- shorten the token views by dropping their trailing info label beginning with the last token first
+- if all info labels where dropped, show an ellipsis at the end and drop token views (again with the last first to drop)
 
 ![Custom Token Layout](Layout.gif)
 
-The challenge comes from the "Token Line View", which adheres to the following rules:
-
-- show token views horizontally from left to right in only one "line"
-- try to never exceed the width of the canvas
-- never shorten the first token view
-- shorten the token views by dropping the trailing info label beginning with the last token first
-- if all info labels where dropped, show an allipsis at the end and drop token views (again beginning with the last)
-
 ## Story
 
-As SwiftUI is rendering and calculating the position of its views by means of their type/semantic declaration of its view tree, any extensive attempt to adjust especially the position of elements (e.g. if you need a custom layout) defeats the purpose of this declarative concept, is hard to "inject" into SiftUIs layout engine and hence is not easy to achieve.
+As SwiftUI is rendering and calculating the position of its views by means of their type/semantic declaration and modifiers, any extensive attempt to adjust especially the position of elements (e.g. if you need a custom layout) defeats the purpose of this declarative concept: it's hard to "inject" into SiftUIs layout engine and hence is not easy to achieve.
 
-This is roughly comparable to the web, where the HTML dom tree describes the semantic relations between the content and (without any CSS is then rendered with default layout constraints by the browser). Adding CSS will then guide the browsers render engine to adjust the content according to the design requirements. But for SwiftUI there is nothing like CSS, so adding layout juice is limited (and complicated).
+This is slightly resembling the web, where the HTML dom tree describes the relations between the content. Adding CSS will then guide the browsers render engine to adjust the content according to the design requirements. But for SwiftUI there is nothing like CSS, so adding layout juice is limited (and complicated).
 
 Conceptually I would have preferred to declare SwiftUI about the dynamics of our layout approach: define cut-off thresholds within nested views or use token-as-a-character in a meta-font and then let the line render its content like a text render engine - but that did not work so manual coordinate calculation was needed.
 
@@ -29,7 +31,7 @@ The `CustomTokenLayout.playground` works for Xcode 12 (b2) only and contains two
 
 ### SwiftUI
 
-For the given layout challenge, three values need to be extracted: the total canvas width, the rendered tokens width and - as part of the token - its name/icon width. These values are stored and handed over to a render calculation which eventually re-render the tokens adjusted by size and position.
+For the given layout challenge, three values need to be extracted: the total canvas width, the rendered token widths and - as part of the tokens - their name/icon width. These values are stored and handed over to a render calculation which eventually re-render the tokens adjusted by size and position.
 
 Sadly retrieving the width out of a component, storing it to a data model/view and render it again is not so easy in SwiftUI:
 
@@ -82,7 +84,7 @@ Here are some preliminary results for the given implementations. Again this is a
 - unsurprisingly for SwiftUI I needed an auxiliary data model `TokenBox` to store/adjust/read the coordinates throughout the render life cycle
 - in SwiftUI ~80 LoC are only "glue code" to get all the sizes out of the view tree into the custom `render` method. In sharp contrast, acting on the UIView's frames is as direct as it can be in UIKit (read, adjust, write, booom)
 - overall (as expected) default "layouting" and prototyping is incredibly intuitive and fast (esp. with previews) in SwiftUI
-- if a given UI/UX goes beyond the system defaults, SwiftUI only "shines" where it exposes the values conceptually and as modifiers (colors, padding, etc) but digging deeper (pixel perfect positioning, aligning to "distant" views) will give you headaches in SwiftUI
+- if a given UI/UX goes beyond the system defaults, SwiftUI only "shines" where it exposes the values conceptually and as modifiers (colors, padding, etc) but digging deeper (e.g. pixel perfect positioning, aligning to "distant" views) will give you headaches in SwiftUI
 
 Note: I've only touched "building a screen" here - a real apps consists of more, especially data handling, view updates, interactions - all of which is discussed in other articles...
 
