@@ -86,8 +86,8 @@ Here are some preliminary results for the given implementations. Again this is a
 - unsurprisingly for SwiftUI I needed an auxiliary data model `TokenBox` to store/adjust/read the coordinates throughout the render life cycle
 - in SwiftUI ~80 LoC are only "glue code" to get all the sizes out of the view tree into the custom `render` method. In sharp contrast, acting on the UIView's frames is as direct as it can be in UIKit (read, adjust, write, booom)
 - overall (as expected) default "layouting" and prototyping is incredibly intuitive and fast (esp. with previews) in SwiftUI
-- if a given UI/UX goes beyond the system defaults, SwiftUI only "shines" where it exposes the values conceptually and as modifiers (colors, padding, etc) but digging deeper (e.g. pixel perfect positioning, aligning to "distant" views) will give you headaches in SwiftUI
-- I haven't tested any new iOS 14 SwiftUI components, mayb that could help
+- if a given UI/UX goes beyond the system defaults, SwiftUI only "shines" where it exposes the values conceptually and as modifiers (colors, padding, etc) but digging deeper (e.g. pixel perfect positioning, aligning to "distant" views, constraining based on visual criterias) will give you headaches
+- I haven't tested any new iOS 14 SwiftUI components, maybe that could help
 
 Note: I've only touched "building a screen" here - a real apps consists of more, especially data handling, view updates, interactions - all of which is discussed in other articles...
 
