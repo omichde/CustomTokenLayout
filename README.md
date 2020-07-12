@@ -17,13 +17,13 @@ The challenge for the "Token Line View":
 
 ## Story
 
-As SwiftUI is rendering and calculating the position of its views by means of their type/semantic declaration and modifiers, any extensive attempt to adjust especially the position of elements (e.g. if you need a custom layout) defeats the purpose of this declarative concept: it's hard to "inject" into SiftUIs layout engine and hence is not easy to achieve.
+As SwiftUI is rendering and calculating the position of its views by means of their type/semantic declaration and modifiers, any extensive attempt to adjust especially the position of elements (e.g. if you need a custom layout) defeats the purpose of this declarative concept: injecting absolute coordinates is currently against the nature of SiftUIs layout engine and hence very "indirect".
 
-This is slightly resembling the web, where the HTML dom tree describes the relations between the content. Adding CSS will then guide the browsers render engine to adjust the content according to the design requirements. But for SwiftUI there is nothing like CSS, so adding layout juice is limited (and complicated).
+This slightly resembls the web, where the HTML dom tree describes the relations between the content tags. Adding CSS will then guide the browsers render engine to adjust the content according to the design requirements. But for SwiftUI there is nothing like CSS, so adding layout juice is limited (and complicated).
 
-Conceptually I would have preferred to declare SwiftUI about the dynamics of our layout approach: define cut-off thresholds within nested views or use token-as-a-character in a meta-font and then let the line render its content like a text render engine - but that did not work so manual coordinate calculation was needed.
+Conceptually I would have preferred to declare SwiftUI about the dynamics of the layout approach: define cut-off thresholds within nested views or use token-view-as-a-character in a meta-font and then let it render its content like a text render engine - but that did not work so manual coordinate calculation was needed.
 
-Coming from UIKit, juggling around with layout constraints (either on frames or by means of AutoLayout) is a common task and although it is sometimes "daunting", still it is super flexible and allows precise control of each aspect of the UI. This playground tries to evaluate the effort, tradeoffs and benefits of this custom layout from both side of the worlds: SwiftUI and UIKit!
+Coming from UIKit, juggling around with layout constraints (either on frames or by means of AutoLayout) is a common task and although it is sometimes "daunting", still it is super flexible and allows precise control of each aspect of the UI. This playground tries to evaluate the effort, tradeoffs and benefits from both side of the worlds: SwiftUI and UIKit!
 
 ## Playground
 
@@ -72,7 +72,9 @@ The `TokenLineView` calls the `render` and `computeBoxes` methods for calculatin
 
 ### UIKit
 
-(soon)
+The implementation of `TokenLineView` and `TokenView` is straight forward, with a little bit of noise about the height alignment. As expected a lot of lines are spent to setup the views sub components. As I'm more used to Storyboards, some tricks may got lost - KISS...
+
+Caveat: the `layer.cornerRadius = TokenView.radius` line sometimes chokes with Xcode 12
 
 ## Results
 
@@ -85,6 +87,7 @@ Here are some preliminary results for the given implementations. Again this is a
 - in SwiftUI ~80 LoC are only "glue code" to get all the sizes out of the view tree into the custom `render` method. In sharp contrast, acting on the UIView's frames is as direct as it can be in UIKit (read, adjust, write, booom)
 - overall (as expected) default "layouting" and prototyping is incredibly intuitive and fast (esp. with previews) in SwiftUI
 - if a given UI/UX goes beyond the system defaults, SwiftUI only "shines" where it exposes the values conceptually and as modifiers (colors, padding, etc) but digging deeper (e.g. pixel perfect positioning, aligning to "distant" views) will give you headaches in SwiftUI
+- I haven't tested any new iOS 14 SwiftUI components, mayb that could help
 
 Note: I've only touched "building a screen" here - a real apps consists of more, especially data handling, view updates, interactions - all of which is discussed in other articles...
 
