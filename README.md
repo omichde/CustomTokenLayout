@@ -3,6 +3,8 @@
 This is an attempt to build a custom layout on top of a `TokenView` in order to get a proper arrangement for a sequence/line of token views.
 The "Token View" consists of a title or icon and a trailing info label with a given background and foreground color with rounded corners.
 
+![Custom Token Layout](Layout.gif)
+
 The challenge comes from the "Token Line View", which adheres to the following rules:
 
 - show token views horizontally from left to right in only one "line"
